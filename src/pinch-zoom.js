@@ -712,38 +712,12 @@ var definePinchZoom = function () {
                         }
                     }).bind(this);
 
-                // Scale 3d and translate3d are faster (at least on ios)
-                // but they also reduce the quality.
-                // PinchZoom uses the 3d transformations during interactions
-                // after interactions it falls back to 2d transformations
-                if (!this.options.use2d || this.hasInteraction || this.inAnimation) {
-                    this.is3d = true;
-                    removeClone();
-
-                    this.el.style.webkitTransform = transform3d;
-                    this.el.style.mozTransform = transform2d;
-                    this.el.style.msTransform = transform2d;
-                    this.el.style.oTransform = transform2d;
-                    this.el.style.transform = transform3d;
-                } else {
-                    // When changing from 3d to 2d transform webkit has some glitches.
-                    // To avoid this, a copy of the 3d transformed element is displayed in the
-                    // foreground while the element is converted from 3d to 2d transform
-                    if (this.is3d) {
-                        this.clone = this.el.cloneNode(true);
-                        this.clone.style.pointerEvents = 'none';
-                        this.container.appendChild(this.clone);
-                        window.setTimeout(removeClone, 200);
-                    }
-
-                    this.el.style.webkitTransform = transform2d;
-                    this.el.style.mozTransform = transform2d;
-                    this.el.style.msTransform = transform2d;
-                    this.el.style.oTransform = transform2d;
-                    this.el.style.transform = transform2d;
-
-                    this.is3d = false;
-                }
+                // Force 2D transformations to preserve visal quality on Safari
+                this.el.style.webkitTransform = transform2d;
+                this.el.style.mozTransform = transform2d;
+                this.el.style.msTransform = transform2d;
+                this.el.style.oTransform = transform2d;
+                this.el.style.transform = transform2d;
             }).bind(this), 0);
         },
 
